@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diao.mapper.LinkMapper">
+    <insert id="addLink" parameterType="LinkDto">
+        insert into t_link(link_id,link_describe, link_address, link_createTime, link_name) values
+        (#{linkId},#{linkDescribe},#{linkAddress},#{linkCreateTime},#{linkName})
+    </insert>
+    <insert id="addLinkUser" parameterType="LinkDto">
+        insert into t_user_link(link_id, user_id) values
+        (#{linkId},#{userId})
+    </insert>
+
+    <select id="getLinkById" resultType="Link">
+        select l.link_id as linkId , link_describe linkDescribe, link_address  linkAddress, link_createTime linkCreateTime, link_name linkName
+        from t_link as l inner join t_user_link ul on l.link_id=ul.link_id
+        where ul.user_id=#{id}
+        limit #{currentPage},#{pageSize}
+    </select>
+    <select id="getLinkCountById" resultType="_int">
+        select count(*)
+        from t_link as l inner join t_user_link ul on l.link_id=ul.link_id
+        where ul.user_id=#{id}
+    </select>
+    <delete id="delLinkTableById" parameterType="string">
+        delete from t_link
+        where link_id=#{linkId}
+    </delete>
+    <delete id="delLinkUserTableById" parameterType="string">
+        delete from t_user_link
+        where link_id=#{linkId}
+    </delete>
+
+
+</mapper>

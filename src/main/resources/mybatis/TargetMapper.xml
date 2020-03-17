@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diao.mapper.TargetMapper">
+    <insert id="addTarget" parameterType="Target">
+        insert into t_target(target_Name, target_createTime)
+        values (#{targetName},#{targetCreateTime});
+    </insert>
+    <insert id="addUserTarget" parameterType="_int">
+        insert into t_user_target(user_id, target_id)
+        values (#{userId},#{targetId})
+    </insert>
+    <select id="getAllTargets" resultType="Target" parameterType="User">
+        select t.target_id as targetId, target_name targetName, target_createTime targetCreateTime
+        from t_target as t inner join t_user_target as ut on t.target_id=ut.target_id
+        where ut.user_id=#{userId}
+    </select>
+    <select id="getTargetIdByTargetName" resultType="int">
+        select target_id
+        from t_target
+        where target_name=#{targetName}
+
+    </select>
+
+</mapper>

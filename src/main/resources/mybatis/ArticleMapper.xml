@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diao.mapper.ArticleMapper">
+    <select id="getAllArticleByUserId" resultType="com.diao.pojo.dto.ArticleDto" parameterType="_int">
+        select a.article_id as articleId , article_title as articleTitle, article_info as articleInfo,articleMD_info as articleMDInfo,
+        article_createTime AS articleCreateTime ,
+        article_state AS articleState
+        from t_article as a
+        where a.user_id=#{id}
+        <if test="keywords!=null">
+            AND article_title like concat('%',#{keywords},'%')
+        </if>
+        limit #{currentPage},#{pageSize}
+    </select>
+    <delete id="delUserArticleByArticleId">
+
+                     delete from d_blog.t_article
+                    where d_blog.t_article.article_id=#{id};
+         </delete>
+    <select id="getArticleCountByUserId" resultType="_int">
+        select count(*)
+        from t_article as a
+        where a.user_id=#{id}
+        <if test="keywords!=null">
+            AND article_title like concat('%',#{keywords},'%')
+        </if>
+    </select>
+
+    <insert id="addArticle" parameterType="Article">
+    insert into t_article( article_title, article_info, article_createTime, article_state, user_id, target_id,articleMD_info)
+    values (#{articleTitle},#{articleInfo},#{articleCreateTime},#{articleState},#{userId},#{targetId},#{articleMDInfo})
+   </insert>
+    <select id="getArticleByArticleId" resultType="Article">
+           select article_id as articleId, article_title articleTitle, article_info articleInfo,
+                  article_createTime articleCreateTime, article_state articleState, user_id userId, target_id targetId,
+                  articleMD_info articleMDInfo
+           from t_article
+           where article_id=#{articleId}
+        </select>
+
+    <insert id="updataArticle" parameterType="Article">
+        update t_article set article_title=#{articleTitle},article_createTime=#{articleCreateTime},
+        articleMD_info=#{articleMDInfo},article_info=#{articleInfo},target_id=#{targetId}
+        where article_id=#{articleId}
+    </insert>
+
+</mapper>
